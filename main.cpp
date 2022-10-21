@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
 
-	Renderer r;
+    Renderer r;
     double omega = 0.1;
     
     for(double i = 0;; i += omega)
