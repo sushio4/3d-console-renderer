@@ -1,5 +1,6 @@
 #pragma once
-#include "Point.h"
+#include "Vec3.h"
+#include "Matrix4.h"
 
 class Line
 {

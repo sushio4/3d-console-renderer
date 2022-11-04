@@ -1,3 +1,4 @@
+#pragma once
 #include <stdlib.h>
 
 size_t getSize(const char* str);

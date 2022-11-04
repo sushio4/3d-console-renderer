@@ -2,79 +2,79 @@
 
 Renderer::Renderer()
 {
-    gradientSize = getSize(gradient);
-    maxZ = 3 * gradientSize;
-
-    updateWindowSize();
+    init();
 }
 
-void Renderer::updateWindowSize()
+void Renderer::clearObjectBuffers()
 {
-    struct winsize w;
-    ioctl(0, TIOCGWINSZ, &w);
-
-    screenWidth = w.ws_col;
-    screenHeight = w.ws_row;
-
-    aspectRatio = (double)screenWidth/(double)screenHeight;
-    bufferSize = screenHeight * screenWidth;
-
-    screenBuffer.reset(new char[bufferSize + 1]);
-    std::fill(screenBuffer.get(), &screenBuffer.get()[bufferSize - 1], ' ');
-    screenBuffer.get()[bufferSize] = '\0';
-
-    depthBuffer.reset(new double[bufferSize]);
-    std::fill(depthBuffer.get(), &depthBuffer.get()[bufferSize - 1], maxZ);
+    lineBuffer.clear();
+    triangleBuffer.clear();
 }
 
-void Renderer::drawFrame()
+void Renderer::clearAll()
 {
-    puts(screenBuffer.get());
+    clearFrame();
+    clearObjectBuffers();
 }
 
-void Renderer::clearFrame()
+void Renderer::pushTriangle(const Triangle& t)
 {
-    std::fill(screenBuffer.get(), &screenBuffer.get()[bufferSize - 1], ' ');
-    screenBuffer.get()[bufferSize] = '\0';
-    
-    std::fill(depthBuffer.get(), &depthBuffer.get()[bufferSize - 1], maxZ);
+    triangleBuffer.push_back(transform(t, modelMatrix));
 }
 
-void Renderer::drawPoint2d(unsigned int x,unsigned int y,unsigned char c)
+void Renderer::pushTriangle(const std::vector<Triangle> &ts)
 {
-    int i = y * screenWidth + x;
-
-    if(i >= bufferSize || i < 0) return;
-    
-    screenBuffer.get()[i] = c;
+    for(Triangle t : ts)
+        triangleBuffer.push_back(transform(t, modelMatrix));
 }
 
-Vec3 Renderer::projection(const Vec3 &&point)
+void Renderer::pushLine(const Line& l)
 {
-    if(!orthographic) return point;
-
-    double coefficient = eyeDistance / (point.z + eyeDistance);
-    
-    return Vec3(point.x * coefficient, point.y * coefficient, point.z);
+    lineBuffer.push_back(transform(l, modelMatrix));
 }
 
-Vec3 Renderer::toScreenCoords(const Vec3 &&point)
+void Renderer::pushLine(const std::vector<Line> &ls)
 {
-    double x = point.x * screenWidth / aspectRatio + screenWidth / 2;
-    double y = (point.y + 1) * screenHeight / 2;
-
-    return Vec3(round(x), round(y), point.z);
+    for(Line l : ls)
+        lineBuffer.push_back(transform(l, modelMatrix));
 }
 
-bool Renderer::depthTest(int x, int y, double z)
+void Renderer::renderShapes()
 {
-    return z <= depthBuffer.get()[y*screenWidth + x] || !testDepth;
+    for(int i = 0; i < lineBuffer.size(); i++)
+        drawLine(lineBuffer[i]);
+
+    for(int i = 0; i < triangleBuffer.size(); i++)
+        drawTriangle(triangleBuffer[i]);
 }
 
-char Renderer::charFromGradient(double z)
+void Renderer::pushCube()
 {
-    char c = ' ';
-    if(z <= maxZ && z >= 0) c = gradient[(int)(z / 3)];
+    Vec3 points[8];
 
-    return c;
-} 
+    points[0] = Vec3(-1, -1, -1);
+    points[1] = Vec3(1, -1, -1);
+    points[2] = Vec3(-1, -1, 1);
+    points[3] = Vec3(1, -1, 1);
+    points[4] = Vec3(-1, 1, -1);
+    points[5] = Vec3(1, 1, -1);
+    points[6] = Vec3(-1, 1, 1);
+    points[7] = Vec3(1, 1, 1);
+
+    // front face
+    pushLine(Line(points[4], points[5]));
+    pushLine(Line(points[5], points[1]));
+    pushLine(Line(points[1], points[0]));
+    pushLine(Line(points[0], points[4]));
+    // back face
+    pushLine(Line(points[6], points[7]));
+    pushLine(Line(points[7], points[3]));
+    pushLine(Line(points[3], points[2]));
+    pushLine(Line(points[2], points[6]));
+    // middle lines
+    pushLine(Line(points[4], points[6]));
+    pushLine(Line(points[5], points[7]));
+    pushLine(Line(points[1], points[3]));
+    pushLine(Line(points[0], points[2]));
+
+}
