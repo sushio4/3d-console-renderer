@@ -1,9 +1,11 @@
 # 3d-console-renderer
+
 It's a Linux project, that aims to help with 3d rendering in terminal.
 
 It uses characters as pixels and gradient to show depth (maybe in the future I'll add light system...)
 
-# How to use?
+## How to use?
+### Initialisation
 Create Renderer object at the beginning, you can change some attributes such as:
 - enable/disableDepthTest()
 
@@ -25,11 +27,15 @@ Create Renderer object at the beginning, you can change some attributes such as:
   
   Equals 1 by default
   
+### Drawing 
+#### Clearing
+In order to draw the frame, you'd most likely want to clear it with clearFrame() first.
+Aside from that, you should also clear object buffers
 
-In order to draw the frame, you'd most likely want to clear it with clearFrame() first. As for now, you can draw lines, triangles, and cubes.
+ 
+As for now, you can draw lines, triangles, and cubes.
 To draw something, you must push it to the object buffer.
 There are two object buffers, one for lines and the other for triangles, but it should not bother you.
 You just pushLine/Triangle/Cube and renderer will put that in an appropriate buffer for you. 
-What should bother you, is the fact, that 
 
 //TODO: finish
