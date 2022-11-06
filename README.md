@@ -32,10 +32,21 @@ Create Renderer object at the beginning, you can change some attributes such as:
 In order to draw the frame, you'd most likely want to clear it with clearFrame() first.
 Aside from that, you should also clear object buffers
 
- 
+#### Transformations
+Now it's time for some transformations.
+Grab some static Matrix4 functions, 
+multiply them to have a transformation matrix,
+and finally assign it to your renderer object's transformation matrix object.
+
+#### Rendering shapes
 As for now, you can draw lines, triangles, and cubes.
 To draw something, you must push it to the object buffer.
 There are two object buffers, one for lines and the other for triangles, but it should not bother you.
-You just pushLine/Triangle/Cube and renderer will put that in an appropriate buffer for you. 
+You just pushLine/Triangle/Cube and renderer will put that in an appropriate buffer for you.
+
+In the future there will be more composite shapes aside from that cube.
+Now you must write your own. Sorry, I'm busy.
+
+
 
 //TODO: finish
