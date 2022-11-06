@@ -47,6 +47,16 @@ You just pushLine/Triangle/Cube and renderer will put that in an appropriate buf
 In the future there will be more composite shapes aside from that cube.
 Now you must write your own. Sorry, I'm busy.
 
+#### Displaying your frame
+Now you need two functions. 
 
+The first, renderShapes() renders all the shapes in both object buffers
+and puts them in frame buffer.
 
-//TODO: finish
+The second, drawFrame() is the final thing you should do to display your frame 
+It simply puts (pun intended) frame buffer on the screen.
+
+### Enjoy!
+Enjoy your brand new frame!
+You can put that stuff in some loop to make cool animations,
+like that cube currently in main.cpp as well as binary release 
