@@ -22,6 +22,9 @@ public:
     void enableOrtho();
     void disableOrtho();
 
+    void pushMatrix();
+    void popMatrix();
+
     bool setEyeDistance(double dist);
 
     Line transform(const Line& line, const Matrix4& matrix);

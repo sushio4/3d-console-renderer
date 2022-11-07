@@ -89,6 +89,17 @@ void Transformations::disableOrtho()
     orthographic = false;
 }
 
+void Transformations::pushMatrix()
+{
+    modelMatrixStack.push(modelMatrix);
+}
+
+void Transformations::popMatrix()
+{
+    modelMatrix = modelMatrixStack.top();
+    modelMatrixStack.pop();
+}
+
 bool Transformations::setEyeDistance(double dist)
 {
     if (dist <= 0)
